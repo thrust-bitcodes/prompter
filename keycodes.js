@@ -9,6 +9,7 @@ exports = {
     // PAUSE_BREAK: 19,
     // CAPS_LOCK: 20,
     // ESCAPE: 27,
+    SPACEBAR: 32,
     // PAGE_UP: 33,
     // PAGE_DOWN: 34,
     // END: 35,

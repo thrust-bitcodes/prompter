@@ -1,5 +1,8 @@
+const terminal = require('./terminal.js');
+
 var prompts = [
-    require('list.js')
+    require('./list.js'),
+    require('./multi-select.js')
 ];
 
 var REG_PROMPTS = {};
@@ -21,6 +24,8 @@ exports = {
 
             results[opt.name] = comp.prompt();
         }
+
+        terminal.restore();
 
         return results;
     }

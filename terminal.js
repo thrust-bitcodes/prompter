@@ -22,11 +22,13 @@ function setMode(newMode) {
     if (mode != STTY_MODES.KEY && newMode == STTY_MODES.KEY) {
         proc.exec('stty -icanon min 1 < /dev/tty');
         proc.exec('stty -echo < /dev/tty');
+        write(escapeCodes.hideCursor());
     } 
     
     if (mode != STTY_MODES.LINE && newMode == STTY_MODES.LINE) {
         proc.exec('stty sane < /dev/tty');
         proc.exec('stty "' + STTY_DEFAULT + '" < /dev/tty');
+        write(escapeCodes.showCursor());
     }
 
     mode = newMode;
@@ -70,17 +72,17 @@ function reset(newLine) {
     }
 }
 
+function restore() {
+    setMode(STTY_MODES.LINE);
+}
+
 exports = {
     reset: reset,
-
     readKey: readKey,
-
     write: write,
-
     writeln: writeln,
-
+    restore: restore,
     getLines: function () { return lines; },
-
     getColuns: function() { return columns; }
 };
 

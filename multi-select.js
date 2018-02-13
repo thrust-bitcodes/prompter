@@ -6,15 +6,27 @@ var markSelected = escapeCodes.make(escapeCodes.COLORS.BLUE);
 var green = escapeCodes.make(escapeCodes.COLORS.GREEN);
 var bold  = escapeCodes.make(escapeCodes.COLORS.BOLD);
 
+
 function create(opts) {
     const listOptions = opts.list || ['None'];
     const question = opts.question || 'None';
     var selected = 0;
+    var marked = {};
 
     terminal.writeln(green(' ? ') + bold(question + ':'));
     terminal.writeln(' ');
 
     const lines = terminal.getLines();
+
+    function nop(msg) {
+        return msg;
+    }
+
+    function drawOption(ele, i) {
+        var line = (marked[i] ? '[X] ' : '[ ] ') + ele;
+
+        return i == selected ? markSelected(line) : line;
+    }
 
     return {
         prompt: function() {
@@ -23,7 +35,9 @@ function create(opts) {
             while (true) {
                 var draw = false;
 
-                switch (terminal.readKey()) {
+                var key = terminal.readKey();
+
+                switch (key) {
                     case KEYCODES.UP_ARROW: 
                         selected--;
                         draw = true;
@@ -36,7 +50,14 @@ function create(opts) {
             
                     case KEYCODES.CARRIAGE_RETURN:
                     case KEYCODES.ENTER:
-                        return selected;
+                        return Object.keys(marked).filter(function(ele) {
+                            return ele;
+                        }).map(Number);
+ 
+                    case KEYCODES.SPACEBAR:
+                        marked[selected] = !marked[selected];
+                        draw = true;
+                        break;
                 }
 
                 if (draw) {
@@ -57,7 +78,7 @@ function create(opts) {
             var buffer = '';
 
             listOptions.forEach(function(ele, i) {
-                buffer += escapeCodes.clearLine() + (i == selected ? markSelected('> ' + ele) : ('  ' + ele)) + "\n";
+                buffer += escapeCodes.clearLine() + drawOption(ele, i) + "\n";
             });
         
             terminal.writeln(buffer);
@@ -65,16 +86,8 @@ function create(opts) {
     };
 }
 
-// var lst = create({
-//     question: 'Selecione o sexo',
-
-//     list: ['Masculino', 'Feminino']
-// });
-
-// lst.prompt();
-
 exports = {
-    type: 'list',
+    type: 'multi-select',
 
     create: create
 };

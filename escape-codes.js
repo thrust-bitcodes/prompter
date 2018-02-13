@@ -83,6 +83,14 @@ function reportCursor(x, y) {
     return esc(y + ';' + x + 'R');
 }
 
+function showCursor() {
+    return esc('?25h');
+}
+
+function hideCursor() {
+    return esc('?25l')
+}
+
 function wrap(wrap, text) {
     return wrap + text + COLORS.RESET;
 }
@@ -101,6 +109,8 @@ exports = {
     moveRight: moveRight,
     moveUp: moveUp,
     clearLine: clearLine,
+    showCursor: showCursor,
+    hideCursor: hideCursor,
 
     COLORS: COLORS,
 
