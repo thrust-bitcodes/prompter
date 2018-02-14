@@ -8,8 +8,14 @@ Bitcode similiar ao Inquirer (que é escrito em Nodejs).
 
 ## Utilização
 
+Instale a dependência.
+
+```bash
+thrust install prompter
+```
+
 ```js
-var prompter = require('./prompter.js');
+var prompter = require('thrust-bitcodes/prompter');
 
 var ret = prompter.prompt([{
     type: 'list',
