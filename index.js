@@ -3,14 +3,14 @@ var prompter = require('./prompter.js');
 var ret = prompter.prompt([{
     type: 'multi-select',
     name: 'many',
-    message: 'Selecione pelo menos uma ou várias opções',
+    message: 'Selecione a(s) opção(ões)',
     options: {
-        list: ["Opação A", "Opção B", "Opção C"]
+        list: ["Opção A", "Opção B", "Opção C"]
     }
 }, {
     type: 'question',
     name: 'nome',
-    message: 'Nome'
+    message: 'Informe seu nome'
 }, {
     type: 'list',
     name: 'one',

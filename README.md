@@ -23,7 +23,32 @@ var ret = prompter.prompt([{
 console.log(ret); // {sexo: 0 ou 1}
 ```
 
-## Ainda em desenvolvimento.
+## Compoentes
+
+### list
+
+Lista de seleção única
+
+[list](assets/list.png)
+
+### question
+
+Entrada de texto
+
+[question](assets/question.png)
+
+### multi-select
+
+Lista de seleção múltipla.
+
+[multi-select](assets/multi-select.png)
+
+## TODO
+
+Este bitcode ainda está em desenvolvimento.
+
+Lista de tarefas:
 - [ ] Suporte para Win e Mac.
-- [ ] Componente de Sim/Não (ou outras letras).
+- [ ] Componente de Sim/Não (e outras opções de letras).
 - [ ] Melhorar as cores apresentadas.
+- [ ] Validação das entradas em cada componente.
