@@ -29,7 +29,7 @@ var ret = prompter.prompt([{
 console.log(ret); // {sexo: 0 ou 1}
 ```
 
-## Compoentes
+## Componentes
 
 ### list
 
