@@ -3,20 +3,13 @@ const escapeCodes = require('./escape-codes.js');
 const KEYCODES = require('./keycodes.js');
 
 var markSelected = escapeCodes.make(escapeCodes.COLORS.BLUE);
-var green = escapeCodes.make(escapeCodes.COLORS.GREEN);
-var bold  = escapeCodes.make(escapeCodes.COLORS.BOLD);
-
 
 function create(opts) {
     const listOptions = opts.list || ['None'];
-    const question = opts.question || 'None';
     var selected = 0;
     var marked = {};
 
-    terminal.writeln(green(' ? ') + bold(question + ':'));
-    terminal.writeln(' ');
-
-    const lines = terminal.getLines();
+    terminal.writeln('');
 
     function nop(msg) {
         return msg;
@@ -26,6 +19,12 @@ function create(opts) {
         var line = (marked[i] ? '[X] ' : '[ ] ') + ele;
 
         return i == selected ? markSelected(line) : line;
+    }
+
+    function getResponse() {
+        return Object.keys(marked).filter(function(ele) {
+            return ele;
+        }).map(Number);
     }
 
     return {
@@ -50,9 +49,8 @@ function create(opts) {
             
                     case KEYCODES.CARRIAGE_RETURN:
                     case KEYCODES.ENTER:
-                        return Object.keys(marked).filter(function(ele) {
-                            return ele;
-                        }).map(Number);
+                        terminal.gotoY(terminal.getY() + listOptions.length);
+                        return getResponse();
  
                     case KEYCODES.SPACEBAR:
                         marked[selected] = !marked[selected];
@@ -73,7 +71,7 @@ function create(opts) {
         },
 
         draw: function() {
-            terminal.reset(lines);
+            terminal.saveY();
 
             var buffer = '';
 
@@ -82,6 +80,22 @@ function create(opts) {
             });
         
             terminal.writeln(buffer);
+
+            terminal.restoreY();
+        },
+
+        drawResponse: function() {
+            var response = getResponse();
+
+            var resp = [];
+
+            response.forEach(function(ele) {
+                if (marked[ele]) {
+                    resp.push(listOptions[ele]);
+                }
+            });
+
+            terminal.writeln(resp.join(","));
         }
     };
 }

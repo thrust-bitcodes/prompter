@@ -40,7 +40,7 @@ const COLORS = {
 };
 
 function esc(code) {
-    return '\u001b[' + code;
+    return '\u001B[' + code;
 }
 
 function gotoxy(x, y) {
@@ -103,6 +103,15 @@ function make(colors) {
     }
 }
 
+function stripAnsi(input) {
+    const pattern = [
+		'[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[a-zA-Z\\d]*)*)?\\u0007)',
+		'(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PRZcf-ntqry=><~]))'
+	].join('|');
+
+    return input.replace(new RegExp(pattern, 'g'), '');
+}
+
 exports = {
     moveDown: moveDown,
     moveLeft: moveLeft,
@@ -111,10 +120,12 @@ exports = {
     clearLine: clearLine,
     showCursor: showCursor,
     hideCursor: hideCursor,
-
+    gotoxy: gotoxy,
+    saveCursor: saveCursor,
+    restoreCursor: restoreCursor,
     COLORS: COLORS,
-
-    make: make
+    make: make,
+    stripAnsi: stripAnsi
 };
 
 

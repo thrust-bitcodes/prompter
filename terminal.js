@@ -10,9 +10,13 @@ const STTY_MODES = {
     LINE: 2
 };
 
-var lines   = 0;
-var columns = 0;
-var maxColumns = 0;
+var savedPosY = [];
+var savedPosX = [];
+var maxY = 1;
+var posY = 1; 
+
+var maxX = 1;
+var posX = 1;
 
 var mode = -1;
 
@@ -51,9 +55,18 @@ function readLine() {
 function write(msg) {
     var values = msg.split(/\n/);
 
-    lines += values.length - 1;
-    columns = values[values.length - 1].length;
-    maxColumns = Math.max(maxColumns, columns);
+    posY += values.length - 1;
+    maxY = Math.max(maxY, posY);
+
+    if (values.length > 1) {
+        posX = 1;
+    }
+
+    posX += escapeCodes.stripAnsi(values[values.length - 1]).length;
+
+    values.forEach(function(row) {
+        maxX = Math.max(maxX, escapeCodes.stripAnsi(row).length);
+    });
 
     stdin.print(msg);
 }
@@ -62,43 +75,135 @@ function writeln(msg) {
     write(msg + "\n");
 }
 
-function reset(newLine) {
-    write(escapeCodes.moveUp(lines - newLine) + '');
-    
-    lines = newLine;
-
-    if (lines < 0) {
-        lines = 0;
+function gotoY(y) {
+    if (y < 0) {
+        return;
     }
+
+    var offset = posY - y;
+
+    posY -= offset;
+
+    if (posY <= 1) {
+        posY = 1;
+    }
+
+    if (offset < 0) {
+        write(escapeCodes.moveDown(Math.abs(offset)));
+    } else {
+        write(escapeCodes.moveUp(offset));
+    }
+}
+
+function gotoX(x) {
+    if (x < 0) {
+        return;
+    }
+
+    var offset = posX - x;
+
+    posX -= offset;
+
+    if (posX <= 1) {
+        posX = 1;
+    }
+
+    if (offset < 0) {
+        write(escapeCodes.moveRight(Math.abs(offset)));
+    } else {
+        write(escapeCodes.moveLeft(offset));
+    }
+}
+
+function saveX() {
+    savedPosX.push(posX);
+}
+
+function clearX() {
+    savedPosX = [];
+}
+
+function restoreX() {
+    if (!savedPosX.length) {
+        return;
+    }
+
+    var newPosX = savedPosX.pop();
+
+    gotoY(newPosX);
+}
+
+function saveY() {
+    savedPosY.push(posY);
+}
+
+function clearY() {
+    savedPosY = [];
+}
+
+function restoreY() {
+    if (!savedPosY.length) {
+        return;
+    }
+
+    var newPosY = savedPosY.pop();
+
+    gotoY(newPosY);
 }
 
 function restore() {
     setMode(STTY_MODES.LINE);
 }
 
+function saveXY() {
+    saveX();
+    saveY();
+}
+
+function restoreXY() {
+    restoreY();
+    restoreX();
+}
+
+function clear() {
+    maxY = posY;
+    write(escapeCodes.clearLine());
+}
+
 exports = {
-    reset: reset,
     readKey: readKey,
+    readLine: readLine,
     write: write,
     writeln: writeln,
     restore: restore,
-    getLines: function () { return lines; },
-    getColuns: function() { return columns; }
+
+    gotoY: gotoY,
+    getY: function() { return posY; },
+    saveY: saveY,
+    clearY: clearY,
+    restoreY: restoreY,
+
+    gotoX: gotoX,
+    getX: function() { return posX; },
+    saveX: saveX,
+    clearX: clearX,
+    restoreX: restoreX,
+
+    saveXY: saveXY,
+    restoreXY: restoreXY,
+    clear: clear
 };
 
-// setMode(STTY_MODES.KEY);
 
-// console.log('Key: ', readKey());
-
-// setMode(STTY_MODES.LINE);
-
-// console.log('Line: ', readLine());
-
-// write('olaaa');
-// write('xxx');
-
-// console.log('column', columns);
-// console.log('column', maxColumns);
-
-// write('Qual é seu nome? ');
-// readLine();
+// writeln('1x');
+// writeln('2xx');
+// writeln('3xxx');
+// writeln('4xxxx');
+// writeln('5xxxxx');
+// gotoY(2);
+// gotoX(2);
+// write('xxxxxxxxxxxxxxxxxx');
+// readKey();
+// clear();
+// // write(escapeCodes.clearLine());
+// readKey();

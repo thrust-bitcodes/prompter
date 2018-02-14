@@ -8,13 +8,9 @@ var bold  = escapeCodes.make(escapeCodes.COLORS.BOLD);
 
 function create(opts) {
     const listOptions = opts.list || ['None'];
-    const question = opts.question || 'None';
     var selected = 0;
 
-    terminal.writeln(green(' ? ') + bold(question + ':'));
-    terminal.writeln(' ');
-
-    const lines = terminal.getLines();
+    terminal.writeln('');
 
     return {
         prompt: function() {
@@ -22,8 +18,9 @@ function create(opts) {
 
             while (true) {
                 var draw = false;
+                var key = terminal.readKey();
 
-                switch (terminal.readKey()) {
+                switch (key) {
                     case KEYCODES.UP_ARROW: 
                         selected--;
                         draw = true;
@@ -36,6 +33,7 @@ function create(opts) {
             
                     case KEYCODES.CARRIAGE_RETURN:
                     case KEYCODES.ENTER:
+                        terminal.gotoY(terminal.getY() + listOptions.length);
                         return selected;
                 }
 
@@ -52,7 +50,7 @@ function create(opts) {
         },
 
         draw: function() {
-            terminal.reset(lines);
+            terminal.saveY();
 
             var buffer = '';
 
@@ -61,6 +59,7 @@ function create(opts) {
             });
         
             terminal.writeln(buffer);
+            terminal.restoreY();
         }
     };
 }
