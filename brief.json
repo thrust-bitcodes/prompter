@@ -5,8 +5,7 @@
   "version": "0.0.1",
   "author": "Tarcísio Abadio de Magalhães Júnior",
   "dependencies": {
-    "bitcodes": ["thrust-bitcodes/prompter"],
-    "jars": [
-    ]
+    "bitcodes": [],
+    "jars": []
   }
 }
