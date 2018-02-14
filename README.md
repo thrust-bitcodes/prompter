@@ -29,19 +29,19 @@ console.log(ret); // {sexo: 0 ou 1}
 
 Lista de seleção única
 
-[list](assets/list.png)
+![list](assets/list.png)
 
 ### question
 
 Entrada de texto
 
-[question](assets/question.png)
+![question](assets/question.png)
 
 ### multi-select
 
 Lista de seleção múltipla.
 
-[multi-select](assets/multi-select.png)
+![multi-select](assets/multi-select.png)
 
 ## TODO
 
