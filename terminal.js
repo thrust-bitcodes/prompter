@@ -1,7 +1,7 @@
 const proc = require('process');
 const std = require('std');
 const KEYCODES = require('./keycodes.js');
-const escapeCodes = require('./escape-codes.js');
+const escapeCodes = require('ansi-escape-codes');
 
 const STTY_DEFAULT = proc.exec('stty -g < /dev/tty');
 

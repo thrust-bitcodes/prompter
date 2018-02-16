@@ -1,5 +1,5 @@
 const terminal = require('./terminal');
-const escapeCodes = require('./escape-codes.js');
+const escapeCodes = require('ansi-escape-codes');
 const KEYCODES = require('./keycodes.js');
 
 var markSelected = escapeCodes.make(escapeCodes.COLORS.BLUE);

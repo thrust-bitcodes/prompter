@@ -1,5 +1,5 @@
 const terminal = require('./terminal.js');
-const escapeCodes = require('./escape-codes.js');
+const escapeCodes = require('ansi-escape-codes');
 
 var prompts = [
     require('./list.js'),
