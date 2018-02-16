@@ -1,4 +1,4 @@
-const proc = require('./process.js');
+const proc = require('process');
 const std = require('std');
 const KEYCODES = require('./keycodes.js');
 const escapeCodes = require('./escape-codes.js');

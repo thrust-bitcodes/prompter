@@ -6,7 +6,8 @@
   "author": "Tarcísio Abadio de Magalhães Júnior",
   "dependencies": {
     "bitcodes": [
-      "std"
+      "std",
+      "process"
     ],
     "jars": []
   }
