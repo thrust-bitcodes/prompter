@@ -1,5 +1,5 @@
 const proc = require('./process.js');
-const stdin = require('./stdin.js');
+const std = require('std');
 const KEYCODES = require('./keycodes.js');
 const escapeCodes = require('./escape-codes.js');
 
@@ -43,13 +43,13 @@ function setMode(newMode) {
 function readKey() {
     setMode(STTY_MODES.KEY);
 
-    return stdin.readKey();
+    return std.readKey();
 }
 
 function readLine() {
     setMode(STTY_MODES.LINE);
 
-    return stdin.readLine();
+    return std.readLine();
 }
 
 function write(msg) {
@@ -68,7 +68,7 @@ function write(msg) {
         maxX = Math.max(maxX, escapeCodes.stripAnsi(row).length);
     });
 
-    stdin.print(msg);
+    std.print(msg);
 }
 
 function writeln(msg) {
